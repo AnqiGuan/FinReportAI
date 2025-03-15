@@ -1,66 +1,65 @@
-import os
-import numpy as np
+#pip install PyMuPDF
+import fitz  # PyMuPDF, needs to be installed first: pip install PyMuPDF
 from PIL import Image
-import onnxruntime as ort
+import io
+import os
 
-encoder_session = ort.InferenceSession("trocr-trocrencoder.onnx")
-decoder_session = ort.InferenceSession("trocr-trocrdecoder.onnx")
+# Set the PDF path and output image directory
+pdf_path = "/Users/yangzhendong/Downloads/Amazon.com.pdf"
+output_folder = "/Users/yangzhendong/Downloads/pdf_images"
+os.makedirs(output_folder, exist_ok=True)
 
-def preprocess_image(image_path, target_size=(384, 384)):
-    image = Image.open(image_path).convert("RGB")
-    image = image.resize(target_size)
-    image_np = np.array(image).astype(np.float32) / 255.0
-    image_np = np.transpose(image_np, (2, 0, 1)) 
-    image_np = np.expand_dims(image_np, axis=0)  
-    return image_np
+# Open the PDF file
+doc = fitz.open(pdf_path)
 
-dummy_vocab = {i: chr(65 + (i % 26)) for i in range(1000)}
-
-def decode_tokens(token_ids, vocab):
-    return ''.join([vocab.get(token, '') for token in token_ids])
-
-def ocr_with_trocr(image_path, encoder_session, decoder_session,
-                   start_token_id=1, end_token_id=2, max_length=100):
-    image_data = preprocess_image(image_path)
+# Iterate through each page and convert it to an image
+for i in range(len(doc)):
+    page = doc.load_page(i)  # Load page i
+    # Set the DPI value, for example, 300 DPI
+    zoom = 300 / 72  # 72 is the default DPI
+    mat = fitz.Matrix(zoom, zoom)
+    pix = page.get_pixmap(matrix=mat)
     
-    encoder_outputs = encoder_session.run(None, {"pixel_values": image_data})
-    encoder_hidden_states = encoder_outputs[0]
-    decoder_input = np.array([[start_token_id]], dtype=np.int64)
-    generated_tokens = []
-    
-    for _ in range(max_length):
-        decoder_inputs = {
-            "input_ids": decoder_input,
-            "encoder_hidden_states": encoder_hidden_states
-        }
-        decoder_outputs = decoder_session.run(None, decoder_inputs)
-        logits = decoder_outputs[0]
-        next_token = int(np.argmax(logits[0, -1, :]))
-        
-        if next_token == end_token_id:
-            break
-        
-        generated_tokens.append(next_token)
-        decoder_input = np.concatenate([decoder_input, np.array([[next_token]], dtype=np.int64)], axis=1)
-    
-    ocr_text = decode_tokens(generated_tokens, dummy_vocab)
-    return ocr_text
+    # Save as a PNG image
+    image_path = os.path.join(output_folder, f"page_{i+1}.png")
+    pix.save(image_path)
+    print(f"Saved {image_path}")
 
-def process_images_folder(image_folder, encoder_session, decoder_session):
-    results = {}
-    for filename in os.listdir(image_folder):
-        if filename.lower().endswith('.jpg'):
-            image_path = os.path.join(image_folder, filename)
-            text = ocr_with_trocr(image_path, encoder_session, decoder_session)
-            results[image_path] = text
-            print(f"OCR result for {image_path}:\n{text}\n")
-    return results
+    image_data = pix.tobytes("png")
+    pil_image = Image.open(io.BytesIO(image_data))
 
-if __name__ == "__main__":
-    image_folder = "output_images"
-    results = process_images_folder(image_folder, encoder_session, decoder_session)
+#pip install easyocr
+#pip install pillow
+
+import easyocr
+from PIL import Image
+import os
+
+# Initialize the OCR reader, use ['en'] for English only, or ['ch_sim', 'en'] for mixed Chinese and English
+reader = easyocr.Reader(['en'])
+
+# Paths to your images
+image_paths = [
+    "/Users/yangzhendong/Downloads/pdf_images/page_1.png",
+    "/Users/yangzhendong/Downloads/pdf_images/page_2.png"
+]
+
+all_text = ""
+
+for i, image_path in enumerate(image_paths):
+    # Perform OCR recognition
+    results = reader.readtext(image_path)
+    # Concatenate the results
+    page_text = "\n".join([res[1] for res in results])
     
-    with open("ocr_results.txt", "w", encoding="utf-8") as f:
-        for image_path, text in results.items():
-            f.write(f"Results for {image_path}:\n{text}\n\n")
-    print("OCR processing complete. Results saved in ocr_results.txt.")
+    all_text += f"\n--- Page {i+1} ---\n{page_text}\n"
+    print(f"Page {i+1} text recognition completed")
+
+print(all_text)
+
+output_txt_path = "/Users/yangzhendong/Downloads/extracted_text_easyocr.txt"
+with open(output_txt_path, "w", encoding="utf-8") as f:
+    f.write(all_text)
+
+print(f"Recognition results have been saved to {output_txt_path}")
+
