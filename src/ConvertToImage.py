@@ -2,7 +2,7 @@ from pdf2image import convert_from_path
 import os
 
 # import pdf file
-pdf_path = 'financial_report.pdf'
+pdf_path = 'examples/financial_report.pdf'
 output_folder = 'output_images'
 os.makedirs(output_folder, exist_ok=True)
 
