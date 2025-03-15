@@ -5,8 +5,8 @@ import io
 import os
 
 # Set the PDF path and output image directory
-pdf_path = "/Users/yangzhendong/Downloads/Amazon.com.pdf"
-output_folder = "/Users/yangzhendong/Downloads/pdf_images"
+pdf_path = "uploads/financial_report.pdf"
+output_folder = "outputs"
 os.makedirs(output_folder, exist_ok=True)
 
 # Open the PDF file
@@ -40,8 +40,8 @@ reader = easyocr.Reader(['en'])
 
 # Paths to your images
 image_paths = [
-    "/Users/yangzhendong/Downloads/pdf_images/page_1.png",
-    "/Users/yangzhendong/Downloads/pdf_images/page_2.png"
+    "outputs/page_1.png",
+    "outputs/page_2.png"
 ]
 
 all_text = ""
@@ -57,7 +57,7 @@ for i, image_path in enumerate(image_paths):
 
 print(all_text)
 
-output_txt_path = "/Users/yangzhendong/Downloads/extracted_text_easyocr.txt"
+output_txt_path = "outputs/extracted_text_easyocr.txt"
 with open(output_txt_path, "w", encoding="utf-8") as f:
     f.write(all_text)
 
