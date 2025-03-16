@@ -7,24 +7,24 @@
 ## Developers
 
 - **Anqi Guan**  
-  LinkedIn: [Anqi Guan](https://www.linkedin.com/in/anqi-g-a2108b24b/)  
-  Email: anqi.guan@outlook.com
+  - LinkedIn: https://www.linkedin.com/in/anqi-g-a2108b24b/
+  - Email: anqi.guan@outlook.com
 
 - **Zhendong Yang**  
-  LinkedIn: [Zhendong Yang](linkedin.com/in/zhendong-aaron-yang-98667b290/ )  
-  Email: yang.zhend@northeastern.edu
+  - LinkedIn: https://www.linkedin.com/in/zhendong-aaron-yang-98667b290/
+  - Email: yang.zhend@northeastern.edu
 
 - **Jing Du**  
-  LinkedIn: [Jing Du](https://www.linkedin.com/in/du-jing2-northeastern-edu/)  
-  Email: du.jing2@northeastern.edu
+  - LinkedIn: https://www.linkedin.com/in/du-jing2-northeastern-edu/
+  - Email: du.jing2@northeastern.edu
 
 - **Sicheng Zhou**  
-  LinkedIn: [Sicheng Zhou](https://www.linkedin.com/in/sicheng-zhou-81419758/)  
-  Email: zhou.sich@northeastern.edu
+  - LinkedIn: https://www.linkedin.com/in/sicheng-zhou-81419758/ 
+  - Email: zhou.sich@northeastern.edu
 
 - **Rui Min**  
-  LinkedIn: [Rui Min](https://www.linkedin.com/in/anotherprofile)  
-  Email: min.rui1@northeastern.edu
+  - LinkedIn: https://www.linkedin.com/in/ryanmin55
+  - Email: min.rui1@northeastern.edu
   
 
 ## Features
