@@ -56,7 +56,7 @@ def process_folder(folder_path):
 
 # Process the output folder images and write OCR results to a text file
 extracted_text = process_folder(output_folder)
-output_file = "extracted_text.txt"
+output_file = "outputs/extracted_text.txt"
 with open(output_file, "w", encoding="utf-8") as f:
     f.write(extracted_text)
 
