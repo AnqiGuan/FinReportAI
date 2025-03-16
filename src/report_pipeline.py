@@ -1,27 +1,37 @@
 import pandas as pd
-from gpt4all import GPT4All
+from llama_cpp import Llama
 
 # Load and Summarize CSV Data
 df = pd.read_csv("outputs/financial_data.csv")
-
 summary = df.to_string(index=False)
 
-# Step 2: Construct the Prompt
+# Construct the Prompt
 prompt = (
-    "You are a financial analyst. Based on the following financial data, please provide a detailed analysis "
-    "of the company's financial health, trends, and any potential concerns:\n\n"
+    "You are a financial analyst. Analyze the following financial data and generate a comprehensive report that includes the following sections:\n"
+    "1. Company Overview\n"
+    "2. Financial Health Analysis\n"
+    "3. Trend Analysis\n"
+    "4. Key Financial Ratios and Metrics\n"
     f"{summary}\n\n"
-    "Please generate a comprehensive report with bullet points and a final summary."
+    "Generate the report as bullet points or paragraphs without any extra greetings or questions. If you do not know company name, just use 'This company'."
 )
 
-# Load the GPT4All Model and Generate the Report
-model = GPT4All("Meta-Llama-3-8B-Instruct.Q4_0.gguf")
+# Load the Model
+llm = Llama.from_pretrained(
+    repo_id="QuantFactory/Meta-Llama-3-8B-Instruct-GGUF",
+    filename="Meta-Llama-3-8B-Instruct.Q2_K.gguf",
+    n_ctx=1024
+)
 
-with model.chat_session():
-    analysis_report = model.generate(prompt, max_tokens=1024)
-    print("Generated Report:")
-    print(analysis_report)
+# Generate the Report
+analysis_report = llm(prompt, max_tokens=2048)
 
-# Step 4: Save the Report to a File
+# Extract the generated text from the output dictionary
+generated_text = analysis_report["choices"][0]["text"]
+
+print("Generated Report:")
+print(generated_text)
+
+# Save the Report to a File
 with open("outputs/analysis_report.txt", "w", encoding="utf-8") as f:
-    f.write(analysis_report)
+    f.write(generated_text)
