@@ -15,6 +15,7 @@ except FileNotFoundError:
     exit()
 
 df["Date"] = pd.to_datetime(df["Date"], format="%m/%d/%Y")
+df.sort_values("Date", inplace=True)
 
 # Summarize Financial Trends Using NLP
 financial_text = f"""
@@ -25,9 +26,10 @@ Debt remained stable at {df['Total Debt'].iloc[0]:,}, while working capital fluc
 
 # Use a Transformer-based model to summarize financial trends
 try:
-    summarizer = pipeline("summarization", model="facebook/bart-large-cnn", device=-1) 
+    summarizer = pipeline("summarization", model="facebook/bart-large-cnn", device=-1)  # Force CPU
     summary_output = summarizer(financial_text, max_length=100, min_length=30, do_sample=False)
-    print("\n📌 Financial Summary:\n", summary_output[0]["summary_text"])
+    financial_summary = summary_output[0]["summary_text"]
+    print("\n📌 Financial Summary:\n", financial_summary)
 except Exception as e:
     print("❌ Error: Unable to load NLP model. Check installation.")
     print(e)
@@ -55,14 +57,24 @@ plt.xlabel("Date")
 plt.ylabel("Value (in Billions)")
 plt.legend()
 plt.xticks(rotation=45)
-
-
+plt.tight_layout()
 save_path = "outputs/financial_analysis.png"  
 plt.savefig(save_path)
 plt.show()
 
 print(f"\n✅ Visualization Complete! Check '{save_path}'")
 
-# ✅ Print Buy/Sell Decisions
+# Print Buy/Sell Decisions
+buy_sell_decisions = df[["Date", "Signal"]].to_string(index=False)
 print("\n📌 Buy/Sell Decisions:")
-print(df[["Date", "Signal"]])
+print(buy_sell_decisions)
+
+# Write final report (summary + buy/sell decisions) to a text file in outputs
+final_report_path = "outputs/advice_report.txt"
+with open(final_report_path, "w", encoding="utf-8") as f:
+    f.write("Financial Summary:\n")
+    f.write(financial_summary + "\n\n")
+    f.write("Buy/Sell Decisions:\n")
+    f.write(buy_sell_decisions + "\n")
+
+print(f"\n✅ Final report saved to '{final_report_path}'")

@@ -37,7 +37,7 @@ This project implements a complete pipeline for converting financial report PDFs
 Install the required Python packages by running:
 
 ```bash
-pip install pdf2image numpy pillow matplotlib llama_cpp pytesseract pandas flask seaborn transformers torch
+pip install pdf2image numpy pillow matplotlib llama-cpp-python pytesseract pandas flask seaborn transformers torch subprocess markdown2
 ```
 
 > **Note:** If you encounter issues installing `llama_cpp` or if you need a version that doesn't require AVX, consider using `llama-cpp-python` instead (see its [GitHub repository](https://github.com/abetlen/llama-cpp-python) for more details).
@@ -48,13 +48,15 @@ pip install pdf2image numpy pillow matplotlib llama_cpp pytesseract pandas flask
 your_project/
 ├── src/                     
 │   ├── app.py                   # Flask file upload UI and main application
+│   ├── advice_pipeline.py                   # Generate a financial advice report
 │   ├── ocr_pipeline.py             # PDF-to-image conversion, OCR extraction, and parsing OCR text into financial_data.csv
 │   ├── visualization_pipeline.py # Visualization and analysis of financial data (e.g., plotting trends)
 │   ├── report_pipeline.py       # Generate a comprehensive financial analysis report using an LLM
 │   ├── outputs/                 # Automatically generated output files:
 │   │   ├── extracted_text.txt   # OCR results
 │   │   ├── financial_data.csv   # Parsed financial data CSV
-│   │   └── analysis_report.txt  # Generated financial analysis report
+│   │   ├── analysis_report.txt  # Generated financial analysis report
+|   |   └── advice_report.txt    # Generated financial advice report
 │   └── uploads/                 # Directory for uploaded PDF files
 ├── examples/                    # Example scripts or notebooks for testing/experiments
 └── README.md                    # This file
@@ -87,14 +89,16 @@ To run the standalone OCR pipeline:
    - Apply Tesseract OCR on each image and save the combined text to `outputs/extracted_text.txt`.
    - Read `outputs/extracted_text.txt`, detect date columns and extract financial fields (and company name), then write the parsed data into `outputs/financial_data.csv`.
 
-### 3. Generate the Financial Analysis Report
+### 3. Generate the Financial Analysis and Advice Report
 To generate a report based on the parsed CSV:
 1. From the `src` folder, run:
    ```bash
    python report_pipeline.py
+   python advice_pipeline.py
+   python visualization_pipeline.py
    ```
 2. The script will load `outputs/financial_data.csv`, construct a prompt, and use the offline language model to generate a detailed financial analysis report.
-3. The final report is saved as `outputs/analysis_report.txt`.
+3. The final report is saved as `outputs/analysis_report.txt` and `outputs/advice_report.txt`.
 
 ## Customization
 
