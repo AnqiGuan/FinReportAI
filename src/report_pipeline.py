@@ -13,7 +13,7 @@ prompt = (
     "3. Trend Analysis\n"
     "4. Key Financial Ratios and Metrics\n"
     f"{summary}\n\n"
-    "Generate the report as bullet points or paragraphs without any extra greetings or questions. If you do not know company name, just use 'This company'."
+    "Generate the report as bullet points or paragraphs without any extra greetings or questions or 'please'. If you do not know company name, just use 'This company'."
 )
 
 # Load the Model
