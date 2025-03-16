@@ -37,7 +37,7 @@ This project implements a complete pipeline for converting financial report PDFs
 Install the required Python packages by running:
 
 ```bash
-pip install pdf2image numpy pillow matplotlib llama_cpp pytesseract pandas flask seaborn transformers
+pip install pdf2image numpy pillow matplotlib llama_cpp pytesseract pandas flask seaborn transformers torch
 ```
 
 > **Note:** If you encounter issues installing `llama_cpp` or if you need a version that doesn't require AVX, consider using `llama-cpp-python` instead (see its [GitHub repository](https://github.com/abetlen/llama-cpp-python) for more details).

@@ -1,16 +1,11 @@
-
-# pip install pandas matplotlib seaborn transformers numpy torch
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from transformers import pipeline
 import numpy as np
 
-# ------------------------------
-# ✅ Load Financial Data
-# ------------------------------
-file_path = "/Users/sichengzhou/Desktop/financial_data.csv"  
+# Load Financial Data
+file_path = "outputs/financial_data.csv"  
 
 try:
     df = pd.read_csv(file_path)
@@ -21,18 +16,16 @@ except FileNotFoundError:
 
 df["Date"] = pd.to_datetime(df["Date"], format="%m/%d/%Y")
 
-# ------------------------------
-# ✅ Step 1: Summarize Financial Trends Using NLP
-# ------------------------------
+# Summarize Financial Trends Using NLP
 financial_text = f"""
-Amazon's total assets grew from {df['Total Assets'].iloc[-1]:,} to {df['Total Assets'].iloc[0]:,}.
+This company's total assets grew from {df['Total Assets'].iloc[-1]:,} to {df['Total Assets'].iloc[0]:,}.
 Total equity increased from {df['Total Equity'].iloc[-1]:,} to {df['Total Equity'].iloc[0]:,}.
 Debt remained stable at {df['Total Debt'].iloc[0]:,}, while working capital fluctuated.
 """
 
 # Use a Transformer-based model to summarize financial trends
 try:
-    summarizer = pipeline("summarization", model="facebook/bart-large-cnn", device=-1)  # ✅ Force CPU
+    summarizer = pipeline("summarization", model="facebook/bart-large-cnn", device=-1) 
     summary_output = summarizer(financial_text, max_length=100, min_length=30, do_sample=False)
     print("\n📌 Financial Summary:\n", summary_output[0]["summary_text"])
 except Exception as e:
@@ -40,15 +33,11 @@ except Exception as e:
     print(e)
     exit()
 
-# ------------------------------
-# ✅ Step 2: Generate Buy/Sell Signals
-# ------------------------------
+# Generate Buy/Sell Signals
 df["Stock Price Change"] = df["Total Equity"].diff()
 df["Signal"] = np.where(df["Stock Price Change"] > 0, "BUY", "SELL")
 
-# ------------------------------
-# ✅ Step 3: Data Visualization
-# ------------------------------
+# Data Visualization
 plt.figure(figsize=(12, 6))
 sns.lineplot(x=df["Date"], y=df["Total Assets"], label="Total Assets", marker="o")
 sns.lineplot(x=df["Date"], y=df["Total Equity"], label="Total Equity", marker="s")
@@ -68,7 +57,7 @@ plt.legend()
 plt.xticks(rotation=45)
 
 
-save_path = "/Users/sichengzhou/Desktop/financial_analysis.png"  
+save_path = "outputs/financial_analysis.png"  
 plt.savefig(save_path)
 plt.show()
 
