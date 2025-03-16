@@ -79,16 +79,16 @@ To set up the project from scratch, follow these steps:
 3. **Install Dependencies:**
 
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirementss
    ```
 
    *Note: The `requirements.txt` file includes dependencies such as `pdf2image`, `numpy`, `pillow`, `matplotlib`, `seaborn`, `pytesseract`, `pandas`, `flask`, `transformers`, `torch`, and the appropriate LLM package (e.g., `llama-cpp-python`).*
-Or 
-    Install the required Python packages by running:
 
-```bash
-pip install pdf2image numpy pillow matplotlib llama-cpp-python pytesseract pandas flask seaborn transformers torch subprocess markdown2
-```
+  Or Install the required Python packages by running:
+
+    ```bash
+    pip install pdf2image numpy pillow matplotlib llama-cpp-python pytesseract pandas flask seaborn transformers torch subprocess markdown2
+    ```
 
 > **Note:** If you encounter issues installing `llama_cpp` or if you need a version that doesn't require AVX, consider using `llama-cpp-python` instead (see its [GitHub repository](https://github.com/abetlen/llama-cpp-python) for more details).
 
